@@ -1,11 +1,11 @@
 package com.example.contactstestapp.ui
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.example.contactstestapp.R
+import androidx.fragment.app.Fragment
+import com.example.contactstestapp.databinding.Fragment1Binding
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -22,6 +22,10 @@ class Fragment1 : Fragment() {
     private var param1: String? = null
     private var param2: String? = null
 
+    private val binding by lazy {
+        Fragment1Binding.inflate(layoutInflater)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -35,7 +39,7 @@ class Fragment1 : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_1, container, false)
+        return binding.root
     }
 
     companion object {
