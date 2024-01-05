@@ -16,6 +16,15 @@ import java.io.InputStreamReader
 class SharedViewModel(application: Application) : AndroidViewModel(application) {
 
     val contacts = MutableLiveData<List<Contact>>()
+    val navigateToFragment2 = MutableLiveData<Contact?>()
+
+    fun onNavigateToFragment2(contact: Contact) {
+        navigateToFragment2.value = contact
+    }
+
+    fun onNavigationHandled() {
+        navigateToFragment2.value = null
+    }
 
     fun readContacts() {
         val context = getApplication<Application>().applicationContext

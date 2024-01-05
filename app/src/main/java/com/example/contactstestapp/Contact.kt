@@ -1,6 +1,8 @@
 package com.example.contactstestapp
 
-data class Contact(val id: String) {
+import java.io.Serializable
+
+data class Contact(val id: String) : Serializable {
     var firstName: String? = ""
     var lastName: String? = ""
     var email: String? = ""
