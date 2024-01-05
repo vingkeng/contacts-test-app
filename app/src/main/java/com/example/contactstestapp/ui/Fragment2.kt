@@ -69,7 +69,7 @@ class Fragment2 : Fragment() {
                                 lastName = etLastName.text.toString()
                                 email = etEmail.text.toString()
                                 phone = etPhone.text.toString()
-                        })
+                            })
                         activity?.supportFragmentManager?.popBackStack()
                     }
                 }
