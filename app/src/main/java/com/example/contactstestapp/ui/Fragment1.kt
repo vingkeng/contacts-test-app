@@ -50,8 +50,8 @@ class Fragment1 : Fragment() {
 
         setupRecyclerView()
 
-        sharedViewModel.contacts.observe(this) { contacts ->
-            contactsAdapter.updateData(contacts)
+        sharedViewModel.contactsMap.observe(this) { contactsMap ->
+            contactsAdapter.updateData(contactsMap.values.toList())
             binding.swipeRefreshLayout.isRefreshing = false
         }
 

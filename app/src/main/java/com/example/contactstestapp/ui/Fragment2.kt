@@ -1,9 +1,11 @@
 package com.example.contactstestapp.ui
 
 import android.os.Bundle
+import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.widget.addTextChangedListener
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.example.contactstestapp.Contact
@@ -40,6 +42,7 @@ class Fragment2 : Fragment() {
             param2 = it.getString(ARG_PARAM2)
         }
 
+        setupButtons()
         setupText()
     }
 
@@ -51,13 +54,69 @@ class Fragment2 : Fragment() {
         return binding.root
     }
 
+    private fun setupButtons() {
+        binding.apply {
+            btnCancelFragment2.setOnClickListener {
+                activity?.supportFragmentManager?.popBackStack()
+            }
+
+            btnSaveFragment2.setOnClickListener {
+                if (checkRequiredFields()) {
+                    param1?.let {
+                        sharedViewModel.updateContacts(
+                            Contact(it.id).apply {
+                                firstName = etFirstName.text.toString()
+                                lastName = etLastName.text.toString()
+                                email = etEmail.text.toString()
+                                phone = etPhone.text.toString()
+                        })
+                        activity?.supportFragmentManager?.popBackStack()
+                    }
+                }
+            }
+        }
+    }
+
     private fun setupText() {
         param1?.let {
-            binding.etFirstName.setText(it.firstName)
-            binding.etLastName.setText(it.lastName)
-            binding.etEmail.setText(it.email)
-            binding.etPhone.setText(it.phone)
+            binding.apply {
+                etFirstName.setText(it.firstName)
+                etLastName.setText(it.lastName)
+                etEmail.setText(it.email)
+                etPhone.setText(it.phone)
+
+                etFirstName.apply {
+                    addTextChangedListener {
+                        etlFirstName.error = null
+                    }
+                }
+
+                etLastName.apply {
+                    addTextChangedListener {
+                        etlLastName.error = null
+                    }
+                }
+            }
         }
+    }
+
+    private fun checkRequiredFields(): Boolean {
+        var isValid = true
+        binding.let {
+            if (TextUtils.isEmpty(it.etFirstName.text?.trim())
+            ) {
+                it.etlFirstName.error = "Cannot be empty"
+                isValid = false
+            }
+
+            if (TextUtils.isEmpty(it.etLastName.text?.trim())
+            ) {
+                it.etlLastName.error = "Cannot be empty"
+                isValid = false
+            }
+        }
+
+        return isValid
     }
 
     companion object {
