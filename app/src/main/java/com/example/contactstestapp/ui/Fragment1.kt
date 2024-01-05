@@ -1,11 +1,15 @@
 package com.example.contactstestapp.ui
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import com.example.contactstestapp.databinding.Fragment1Binding
+import com.example.contactstestapp.ui.adapters.ContactsRVAdapter
+import com.example.contactstestapp.ui.viewmodels.SharedViewModel
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -26,12 +30,31 @@ class Fragment1 : Fragment() {
         Fragment1Binding.inflate(layoutInflater)
     }
 
+    private val sharedViewModel by lazy {
+        ViewModelProvider(requireActivity())[SharedViewModel::class.java]
+    }
+
+    private val contactsAdapter by lazy {
+        ContactsRVAdapter(arrayListOf()) { contactClicked ->
+            Log.d("Frag1", ": $contactClicked")
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             param1 = it.getString(ARG_PARAM1)
             param2 = it.getString(ARG_PARAM2)
         }
+
+        setupRecyclerView()
+
+        sharedViewModel.contacts.observe(this) { contacts ->
+            contactsAdapter.updateData(contacts)
+            binding.swipeRefreshLayout.isRefreshing = false
+        }
+
+        sharedViewModel.readContacts()
     }
 
     override fun onCreateView(
@@ -40,6 +63,18 @@ class Fragment1 : Fragment() {
     ): View? {
         // Inflate the layout for this fragment
         return binding.root
+    }
+
+    private fun setupRecyclerView() {
+        binding.apply {
+            rvFragment1.apply {
+                adapter = contactsAdapter
+            }
+
+            swipeRefreshLayout.setOnRefreshListener {
+                sharedViewModel.readContacts()
+            }
+        }
     }
 
     companion object {
